@@ -61,7 +61,7 @@ const apps = [
     disabled: false,
     favourite: true,
     desktop_shortcut: false,
-    screen: displaySpotify, // India Top 50 Playlist 😅
+    screen: displaySpotify,
   },
   {
     id: "settings",
@@ -98,19 +98,10 @@ const apps = [
     favourite: false,
     desktop_shortcut: true,
     isExternalApp: true,
-    url: "https://github.com/vivek9patel",
+    url: "https://github.com/AdleeAfif",
     screen: () => {},
   },
-  {
-    id: "tars",
-    title: "Ask Tars",
-    icon: "./themes/Yaru/apps/tars.svg",
-    disabled: false,
-    favourite: false,
-    desktop_shortcut: true,
-    isExternalApp: true,
-    url: "https://www.vivek9patel.com/tars",
-  },
+  //maybe will add more apps
 ];
 
 export default apps;
