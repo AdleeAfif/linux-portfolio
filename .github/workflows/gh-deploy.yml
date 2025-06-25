@@ -37,7 +37,7 @@ jobs:
       - name: Exporting Bundle Files 🎪
         run: npm run export
       - name: Create .nojekyll file
-        shell: pwsh
+        shell: powershell
         run: New-Item -Path "./out/.nojekyll" -ItemType File -Force
 
       - name: Deploy to Github-Pages 🚀
@@ -48,7 +48,7 @@ jobs:
 
       - name: Cleanup Workflow Workspace 🧹
         if: always()
-        shell: pwsh
+        shell: powershell
         run: |
           # Only clean the current workflow workspace
           $workspace = $env:GITHUB_WORKSPACE
