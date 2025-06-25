@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted # Changed to self-hosted
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -23,7 +23,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
       - name: Installing Packages 🥁
         run: npm ci
 
@@ -37,7 +36,9 @@ jobs:
 
       - name: Exporting Bundle Files 🎪
         run: npm run export
-      - run: touch ./out/.nojekyll
+      - name: Create .nojekyll file
+        shell: pwsh
+        run: New-Item -Path "./out/.nojekyll" -ItemType File -Force
 
       - name: Deploy to Github-Pages 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5
@@ -45,34 +46,30 @@ jobs:
           branch: gh-pages
           folder: out
 
-      - name: Automated Cleanup 🧹 
+      - name: Cleanup Workflow Workspace 🧹
         if: always()
+        shell: pwsh
         run: |
-          echo "🧹 Starting cleanup process..."
+          # Only clean the current workflow workspace
+          $workspace = $env:GITHUB_WORKSPACE
+          Write-Host "Cleaning workspace: $workspace"
 
-          # Clear npm cache
+          # Clean only build artifacts in the workspace
+          if (Test-Path "$workspace\.next") { 
+            Remove-Item -Path "$workspace\.next" -Recurse -Force 
+            Write-Host "✅ Removed .next directory"
+          }
+
+          if (Test-Path "$workspace\out") { 
+            Remove-Item -Path "$workspace\out" -Recurse -Force 
+            Write-Host "✅ Removed out directory"
+          }
+
+          if (Test-Path "$workspace\node_modules") { 
+            Remove-Item -Path "$workspace\node_modules" -Recurse -Force 
+            Write-Host "✅ Removed node_modules directory"
+          }
+
+          # Clean npm cache for this workspace only
           npm cache clean --force
-          echo "✅ NPM cache cleared"
-
-          # Remove build artifacts (safe to remove)
-          if [ -d ".next" ]; then
-            rm -rf .next
-            echo "✅ .next directory removed"
-          fi
-
-          if [ -d "out" ]; then
-            rm -rf out
-            echo "✅ out directory removed"
-          fi
-
-          # Remove node_modules (will be reinstalled next time)
-          if [ -d "node_modules" ]; then
-            rm -rf node_modules
-            echo "✅ node_modules removed"
-          fi
-
-          # Clear any temporary files
-          find . -name "*.tmp" -delete 2>/dev/null || true
-          find . -name "*.log" -delete 2>/dev/null || true
-
-          echo "🎉 Cleanup completed successfully!"
+          Write-Host "✅ Cleared npm cache"
