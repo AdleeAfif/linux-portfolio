@@ -11,12 +11,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted # Changed to self-hosted
 
     strategy:
       matrix:
         node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v2
@@ -43,5 +42,37 @@ jobs:
       - name: Deploy to Github-Pages 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: out # The folder the action should deploy.
+          branch: gh-pages
+          folder: out
+
+      - name: Automated Cleanup 🧹 
+        if: always()
+        run: |
+          echo "🧹 Starting cleanup process..."
+
+          # Clear npm cache
+          npm cache clean --force
+          echo "✅ NPM cache cleared"
+
+          # Remove build artifacts (safe to remove)
+          if [ -d ".next" ]; then
+            rm -rf .next
+            echo "✅ .next directory removed"
+          fi
+
+          if [ -d "out" ]; then
+            rm -rf out
+            echo "✅ out directory removed"
+          fi
+
+          # Remove node_modules (will be reinstalled next time)
+          if [ -d "node_modules" ]; then
+            rm -rf node_modules
+            echo "✅ node_modules removed"
+          fi
+
+          # Clear any temporary files
+          find . -name "*.tmp" -delete 2>/dev/null || true
+          find . -name "*.log" -delete 2>/dev/null || true
+
+          echo "🎉 Cleanup completed successfully!"
