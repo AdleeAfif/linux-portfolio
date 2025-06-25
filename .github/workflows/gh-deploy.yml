@@ -40,11 +40,11 @@ jobs:
         shell: powershell
         run: New-Item -Path "./out/.nojekyll" -ItemType File -Force
 
-      - name: Deploy to Github-Pages 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.5
+      - name: Deploy to GitHub Pages 🚀
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: out
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
 
       - name: Cleanup Workflow Workspace 🧹
         if: always()
