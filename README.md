@@ -32,7 +32,7 @@ into it. Replace \*your user id and your service ID with your values in your Ema
 
 This project is a fork of an original repository. I would like to acknowledge and credit the original creator for their amazing work on this Linux-style portfolio website.
 
-**Original Repository:** [https://github.com/vivek9patel/vivek9patel.github.io]
+[**Original Repository**](https://github.com/vivek9patel/vivek9patel.github.io)
 
 This fork maintains the core functionality and design while adding my own modifications and improvements. The original creator's work serves as the foundation for this project, and I am grateful for their contribution to the open source community.
 
